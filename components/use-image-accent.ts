@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { accentFromImage, type ImageAccent } from "@/lib/image-accent";
 
-const FALLBACK: ImageAccent = { color: "#ffffff", contrast: 21 };
+const FALLBACK: ImageAccent = { color: "#ffd8a8", contrast: 12 };
 
 export function useImageAccent(src: string) {
   const [accent, setAccent] = useState<ImageAccent>(FALLBACK);

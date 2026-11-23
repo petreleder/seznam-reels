@@ -12,13 +12,32 @@ export type SimilarListing = {
   href: string;
 };
 
+export type GiftProduct = {
+  image: string;
+  name: string;
+  price: string;
+  rating?: string;
+  reviews?: string;
+  href: string;
+};
+
 export type TopicCard = {
   id: string;
   title: string;
   summary: string;
   image: string;
   href: string;
-  kind: "topic" | "video" | "listing" | "tip";
+  kind: "topic" | "video" | "listing" | "tip" | "gifts";
+  products?: GiftProduct[];
+  /** Wordmark shown instead of the top banner. */
+  logo?: string;
+  /** Bold part of the slide heading. The rest, when set, stays regular. */
+  headingLead?: string;
+  headingRest?: string;
+  /** Label of the bottom link. */
+  action?: string;
+  /** Full-screen story is an ad: “Reklama.” label and “Zjistit více”. */
+  ad?: boolean;
   video?: string;
   frames?: ListingFrame[];
   similar?: SimilarListing[];
@@ -132,8 +151,200 @@ function withVideos(topics: TopicCard[]) {
   while (topicIndex < topics.length) merged.push(topics[topicIndex++]);
   merged.splice(Math.min(2, merged.length), 0, LISTING);
   merged.splice(Math.min(3, merged.length), 0, TIP);
+  merged.splice(Math.min(4, merged.length), 0, GIFTS);
+  const sportAt = merged.findIndex((card) => card.href.includes("sport.cz"));
+  merged.splice(sportAt >= 0 ? sportAt + 1 : merged.length, 0, SBAZAR);
+  const sportNow = merged.findIndex((card) => card.href.includes("sport.cz"));
+  merged.splice(Math.min(sportNow >= 0 ? sportNow + 2 : merged.length, merged.length), 0, AD);
   return merged;
 }
+
+const AD: TopicCard = {
+  id: "ad-devotion",
+  title: "Devotion",
+  summary: "",
+  image: "/videos/reklama.jpg",
+  video: "/videos/reklama.mp4",
+  href: "https://www.dolcegabbana.com/en-cz/beauty/perfumes-for-her/devotion/devotion-eau-de-parfum-intense---VT00TEVT0009V000.html",
+  kind: "video",
+  ad: true,
+};
+
+const GIFTS: TopicCard = {
+  id: "gifts-zbozi",
+  title: "Tipy na dárky",
+  summary: "",
+  image: "/zbozi/banner.jpg",
+  href: "https://www.zbozi.cz/inspirace/",
+  kind: "gifts",
+  products: [
+    {
+      image: "/zbozi/p0.jpg",
+      name: "Garmin vívoactive 5 Metallic Orchid/Orchid",
+      price: "od 4\u00a0190,-",
+      href: "https://www.zbozi.cz/vyrobek/garmin-vivoactive-5/?varianta=metallic-orchid-orchid",
+    },
+    {
+      image: "/zbozi/p1.jpg",
+      name: "Tblitz A7s černá",
+      price: "od 178,-",
+      href: "https://www.zbozi.cz/vyrobek/tblitz-a7s/?varianta=cerna",
+    },
+    {
+      image: "/zbozi/p2.jpg",
+      name: "ALIGATOR ASG003",
+      price: "od 1\u00a0690,-",
+      rating: "4,8",
+      reviews: "4 recenze",
+      href: "https://www.zbozi.cz/vyrobek/aligator-asg003/",
+    },
+    {
+      image: "/zbozi/p3.jpg",
+      name: "Xiaomi Redmi Note 17 5G 6/256 GB Sky Teal",
+      price: "od 6\u00a0990,-",
+      href: "https://www.zbozi.cz/vyrobek/xiaomi-redmi-note-17-5g/?varianta=6-256-gb-sky-teal",
+    },
+    {
+      image: "/zbozi/p4.jpg",
+      name: "Navitel E501",
+      price: "od 1\u00a0274,-",
+      rating: "3,7",
+      reviews: "3 recenze",
+      href: "https://www.zbozi.cz/vyrobek/navitel-e501/",
+    },
+    {
+      image: "/zbozi/p5.jpg",
+      name: "ALIGATOR Mini Beat ABSMB01 černý",
+      price: "od 349,-",
+      rating: "4,5",
+      reviews: "4 recenze",
+      href: "https://www.zbozi.cz/vyrobek/aligator-mini-beat-absmb01-cerny/",
+    },
+    {
+      image: "/zbozi/p6.jpg",
+      name: "Shokz OpenMove šedá",
+      price: "od 1\u00a0610,-",
+      href: "https://www.zbozi.cz/vyrobek/shokz-openmove/?varianta=seda",
+    },
+    {
+      image: "/zbozi/p7.jpg",
+      name: "DELL Pro Slim QCS1250 (9P3DM)",
+      price: "od 22\u00a0150,-",
+      href: "https://www.zbozi.cz/vyrobek/dell-pro-slim-qcs1250-9p3dm/",
+    },
+    {
+      image: "/zbozi/p8.jpg",
+      name: "Logitech G335 bílá",
+      price: "od 1\u00a0019,-",
+      href: "https://www.zbozi.cz/vyrobek/logitech-g335/?varianta=bila",
+    },
+    {
+      image: "/zbozi/p9.jpg",
+      name: "Powerton Smart Ring Pro zlatý 13",
+      price: "od 858,-",
+      href: "https://www.zbozi.cz/vyrobek/powerton-smart-ring-pro-zlaty/?varianta=13",
+    },
+    {
+      image: "/zbozi/p10.jpg",
+      name: "Trust GXT 491P Fayzo Wireless 25305 fialová",
+      price: "od 999,-",
+      href: "https://www.zbozi.cz/vyrobek/trust-gxt-491p-fayzo-wireless-25305-fialova/",
+    },
+    {
+      image: "/zbozi/p11.jpg",
+      name: "ALIGATOR Smart Ring stříbrný 10",
+      price: "od 490,-",
+      href: "https://www.zbozi.cz/vyrobek/aligator-smart-ring-stribrny/?varianta=10",
+    },
+  ],
+};
+
+const SBAZAR: TopicCard = {
+  id: "market-sbazar",
+  title: "Nové inzeráty",
+  summary: "",
+  image: "/sbazar/p0.jpg",
+  logo: "/sbazar/logo.svg",
+  headingLead: "Nové inzeráty",
+  headingRest: "Stavební a zemní stroje",
+  action: "Více inzerátů na Sbazar",
+  href: "https://www.sbazar.cz/280-stavebni-zemni-stroje",
+  kind: "gifts",
+  products: [
+    {
+      image: "/sbazar/p0.jpg",
+      name: "Pásový minibagr PME - 12 v\u00a0Dubenec",
+      price: "138\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/235725780-pasovy-minibagr-pme-12",
+    },
+    {
+      image: "/sbazar/p1.jpg",
+      name: "BAGR GORILA G12S LITE2 2026 s příslušentvím v\u00a0Tábor",
+      price: "189\u00a0900\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/235970379-bagr-gorila-g12s-lite2-2026-s-prislusentvim",
+    },
+    {
+      image: "/sbazar/p2.jpg",
+      name: "Gorila, AKCE - Minibagr G18SE I PRO v\u00a0Hořice",
+      price: "289\u00a0900\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/227753971-gorila-akce-minibagr-g18se-i-pro",
+    },
+    {
+      image: "/sbazar/p3.jpg",
+      name: "Silniční fréza Wirtgen w500 v\u00a0Líšný",
+      price: "210\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/204678381-silnicni-freza-wirtgen-w500",
+    },
+    {
+      image: "/sbazar/p4.jpg",
+      name: "Gorila, AKCE- Minibagr G26SE I PRO v\u00a0Hořice",
+      price: "489\u00a0900\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/227383414-gorila-akce-minibagr-g26se-i-pro",
+    },
+    {
+      image: "/sbazar/p5.jpg",
+      name: "JCB 8080 pásové rypadlo v\u00a0Líšný, Líšný 2.díl",
+      price: "360\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/216049738-jcb-8080-pasove-rypadlo",
+    },
+    {
+      image: "/sbazar/p6.jpg",
+      name: "Gorila, Minibagr G20SE I PRO CAB v\u00a0Hořice",
+      price: "495\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/227383138-gorila-minibagr-g20se-i-pro-cab",
+    },
+    {
+      image: "/sbazar/p7.jpg",
+      name: "Minibagr v\u00a0Benešov",
+      price: "150\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/235962981-minibagr",
+    },
+    {
+      image: "/sbazar/p8.jpg",
+      name: "Minibagr CRONA CR 120 H v\u00a0Vodňany",
+      price: "230\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/233962050-minibagr-crona-cr-120-h",
+    },
+    {
+      image: "/sbazar/p9.jpg",
+      name: "Gorila, AKCE- Minibagr G20SE I PRO v\u00a0Hořice",
+      price: "447\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/227383117-gorila-akce-minibagr-g20se-i-pro",
+    },
+    {
+      image: "/sbazar/p10.jpg",
+      name: "Fortschritt E517 v\u00a0Jakubov u Moravských Budějovic",
+      price: "120\u00a0000\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/235955265-fortschritt-e517",
+    },
+    {
+      image: "/sbazar/p11.jpg",
+      name: "Gorila, AKCE -Minibagr G18SE I PRO CAB v\u00a0Hořice",
+      price: "299\u00a0900\u00a0Kč",
+      href: "https://www.sbazar.cz/inzerat/227382382-gorila-akce-minibagr-g18se-i-pro-cab",
+    },
+  ],
+};
 
 const TIP: TopicCard = {
   id: "tip-nemy-hokej",

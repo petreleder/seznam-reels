@@ -173,12 +173,12 @@ export function accentFromImage(image: CanvasImageSource & { width: number; heig
   canvas.width = 36;
   canvas.height = 78;
   const context = canvas.getContext("2d", { willReadFrequently: true });
-  if (!context) return { color: "#ffffff", contrast: 21 };
+  if (!context) return { color: "#ffd8a8", contrast: 12 };
   context.drawImage(image, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
   try {
     const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
     return accentFromImageData(pixels.data, canvas.width, canvas.height);
   } catch {
-    return { color: "#ffffff", contrast: 21 };
+    return { color: "#ffd8a8", contrast: 12 };
   }
 }
